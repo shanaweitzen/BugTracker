@@ -1,0 +1,70 @@
+<!-- now we can refer to BugboardCtrl as 'bb' moving forward--> 
+<div ng-controller="BugboardCtrl as bb">
+	<div class="list-area">
+		<div class="list-wrapper">
+			<!-- one-time binding allows you to flag collections & values that only need to be evaluated once. -->
+			<!-- place two colons before the collection or value you want to bind once to.-->
+			<ul class="list" ng-repeat="status in ::bb.statuses">
+				<h4 class="status">{{ ::status.name }}</h4>
+				<hr/>
+				<!--Filters allow you to filter the contents of a collection to give you exactly what you want based on some sort of predefined criteria. -->
+
+				<!-- we want to filter the bugs array to return only the bugs that match the status that we’re currently on.-->
+				<!-- you can modify the contents of an ngRepeat by adding a pipe symbol and then declaring a filter and what you want to use as your criteria. -->
+
+				<!-- like this: bug in bb.bugs |  filter: {status:status.name} -->
+
+				<!-- To capture when a user selects a bug, we’ll attach ngClick to the bug template, 
+				which will call bb.setCurrentBug with the bug object that was selected as a parameter: -->
+				<li class="bug" ng-repeat="bug in bb.bugs | filter: {status:status.name}"  ng-click="bb.setCurrentBug(bug)">
+					<article><!-- The <article> tag specifies independent, self-contained content.An article should make sense on its own and it should be possible to distribute it independently from the rest of the site. -->
+						<div class="bug-title">
+							<!-- <button type="button" class="close">×</button> -->
+							<p class="title">{{bug.title}}</p>
+						</div><!-- ends bug-title div -->
+						<div class="bug-description">
+							<p>{{bug.description}}</p>
+						</div><!-- ends bug-drescription div -->
+					</article>
+				</li>
+			</ul>
+		</div><!-- closing tag for list-wrapper -->
+	</div><!-- closing tag for list-area -->
+	<div class="bug-details" ng-if="bb.currentBug">
+		<h4>Bug Details</h4>
+		<form name="bb.detailsForm">
+			<div class="form-group">
+				<label for="inputTitle">*Title</label>
+				 <!-- This method gets called when a bug is selected in the view. The story parameter gets assigned to the currentBug property.	We then use angular.copy to store a copy of currentBug as editedBug. -->
+				 <!-- Placeholder={{bb.currentBug.title}} -->
+				<input type="text" id="inputTitle" name="inputTitle" Placeholder="Title" ng-model="bb.editedBug.title"
+				ng-required="true" ng-minlength="3" ng-maxlength="30"
+				class="form-control">
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="inputDescription">Description</label>
+				<textarea id="inputDescription" class="form-control" placeholder="Description" rows="3" 
+					ng-model="bb.currentBug.description">
+				</textarea>
+			</div>
+		</form>
+		<div ng-if="bb.currentBug">
+            <button class="btn btn-default" ng-click="bb.updateCancel()">
+                Cancel
+            </button>
+            <button class="btn pull-right btn-default"
+                    ng-disabled="bb.detailsForm.$invalid"
+                    ng-click="bb.updateBug()">Update</button>
+        </div>
+	</div><!-- ends bug details div -->
+</div><!-- end starting div , container-->
+
+
+
+
+
+
+
+
+
+		
